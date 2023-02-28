@@ -19,13 +19,20 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc) {
             doc["note_title"],
             style: AppStyle.mainTitle,
           ),
+          const SizedBox(
+            height: 4.0,
+          ),
           Text(
             doc["creation_date"],
             style: AppStyle.dateTitle,
           ),
+          const SizedBox(
+            height: 8.0,
+          ),
           Text(
             doc["note_content"],
             style: AppStyle.mainContent,
+            overflow: TextOverflow.ellipsis,
           )
         ],
       ),
