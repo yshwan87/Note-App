@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:my_note_app/style/app_style.dart';
 
 class NoteEditorScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class NoteEditorScreen extends StatefulWidget {
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   // ignore: non_constant_identifier_names
   int color_id = Random().nextInt(AppStyle.cardsColor.length);
-  String date = DateTime.now().toString();
+  String formattedDate = DateFormat('yyyy-MM-dd hh:mm a').format(DateTime.now());
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _mainController = TextEditingController();
 
@@ -47,7 +48,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               height: 8.0,
             ),
             Text(
-              date,
+              formattedDate,
               style: AppStyle.dateTitle,
             ),
             const SizedBox(
@@ -67,7 +68,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         onPressed: () async {
           FirebaseFirestore.instance.collection("Notes").add({
             "note_title": _titleController.text,
-            "creation_date": date,
+            "creation_date": formattedDate,
             "note_content": _mainController.text,
             "color_id": color_id
           }).then((value) {

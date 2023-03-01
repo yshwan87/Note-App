@@ -29,10 +29,12 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc) {
           const SizedBox(
             height: 8.0,
           ),
-          Text(
-            doc["note_content"],
-            style: AppStyle.mainContent,
-            overflow: TextOverflow.ellipsis,
+          Expanded(
+            child: Text(
+              doc["note_content"],
+              style: AppStyle.mainContent,
+              overflow: TextOverflow.ellipsis,
+            ),
           )
         ],
       ),

@@ -21,6 +21,7 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
     return Scaffold(
       backgroundColor: AppStyle.cardsColor[colorId],
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.black),
         backgroundColor: AppStyle.cardsColor[colorId],
         elevation: 0.0,
       ),
@@ -46,7 +47,6 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
             Text(
               widget.doc["note_content"],
               style: AppStyle.mainContent,
-              overflow: TextOverflow.ellipsis,
             )
           ],
         ),
