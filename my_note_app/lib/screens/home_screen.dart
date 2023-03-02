@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_note_app/screens/note_editor.dart';
-import 'package:my_note_app/screens/note_reader.dart';
 import 'package:my_note_app/style/app_style.dart';
 import 'package:my_note_app/widgets/note_card.dart';
 
@@ -43,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection("Notes").snapshots(),
+                  stream: FirebaseFirestore.instance.collection("Notes").orderBy("creation_date").snapshots(),
                   builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -61,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: ((context) => NoteReaderScreen(note)),
+                                      builder: ((context) => NoteEditorScreen(note)),
                                     ));
                               }, note),
                             )
@@ -83,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: ((context) => const NoteEditorScreen()),
+                builder: ((context) => const NoteEditorScreen(null)),
               ),
             );
           },
