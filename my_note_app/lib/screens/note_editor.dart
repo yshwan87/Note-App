@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_note_app/style/app_style.dart';
 
+import '../widgets/alert_dialog.dart';
+
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen(this.doc, {super.key});
 
@@ -52,6 +54,20 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           widget.doc == null ? "Add a new Note" : "Edit",
           style: const TextStyle(color: Colors.black),
         ),
+        actions: <Widget>[
+          Visibility(
+            visible: widget.doc == null ? false : true,
+            child: IconButton(
+              icon: const Icon(
+                Icons.delete_forever_rounded,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                showAlertDialog(context, widget.doc!.id);
+              },
+            ),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

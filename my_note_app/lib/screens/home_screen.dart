@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_note_app/screens/note_editor.dart';
-import 'package:my_note_app/style/app_style.dart';
 import 'package:my_note_app/widgets/note_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,12 +15,17 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppStyle.mainColor,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0.0,
-          title: const Text('FireNotes'),
+          title: Text('FireNotes',
+              style: GoogleFonts.roboto(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              )),
           centerTitle: true,
-          backgroundColor: AppStyle.mainColor,
+          backgroundColor: Colors.white,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -32,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(
                 "Your recent Notes",
                 style: GoogleFonts.roboto(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
                 ),
