@@ -12,20 +12,61 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isDescending = false;
+  String dateOrderMenu = "Date Descending";
+
+  void changeOrder() {
+    setState(() {
+      isDescending = !isDescending;
+      dateOrderMenu = "Date Ascending";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0.0,
-          title: Text('FireNotes',
+          title: Text('Fire Notes',
               style: GoogleFonts.roboto(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 22,
               )),
-          centerTitle: true,
           backgroundColor: Colors.white,
+          actions: [
+            PopupMenuButton(
+                icon: const Icon(
+                  Icons.menu_sharp,
+                  color: Colors.black,
+                ),
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: Text(dateOrderMenu),
+                    ),
+                    const PopupMenuItem<int>(
+                      value: 1,
+                      child: Text("Settings"),
+                    ),
+                    const PopupMenuItem<int>(
+                      value: 2,
+                      child: Text("Logout"),
+                    ),
+                  ];
+                },
+                onSelected: (value) {
+                  if (value == 0) {
+                    changeOrder();
+                  } else if (value == 1) {
+                    print("Settings menu is selected.");
+                  } else if (value == 2) {
+                    print("Logout menu is selected.");
+                  }
+                }),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -33,20 +74,12 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Your recent Notes",
-                style: GoogleFonts.roboto(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                ),
-              ),
               const SizedBox(
-                height: 20.0,
+                height: 5.0,
               ),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection("Notes").orderBy("creation_date").snapshots(),
+                  stream: FirebaseFirestore.instance.collection("Notes").orderBy("creation_date", descending: isDescending).snapshots(),
                   builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
