@@ -17,24 +17,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isDescending = false;
   String dateOrderMenu = "Date Descending";
   String searchWord = "";
-  var streamQuery = FirebaseFirestore.instance.collection("Notes").orderBy("creation_date", descending: false).snapshots();
 
   void changeOrder() {
     setState(() {
       isDescending = !isDescending;
       dateOrderMenu = "Date Ascending";
-    });
-  }
-
-  void changeSearchWord(String word) {
-    setState(() {
-      searchWord = word;
-    });
-  }
-
-  void getStream(String searchWord, bool isDescending) {
-    setState(() {
-      streamQuery = FirebaseFirestore.instance.collection("Notes").where('note_content', isGreaterThanOrEqualTo: searchWord).where('note_content', isLessThan: '${searchWord}z').orderBy("note_content", descending: false).orderBy("creation_date", descending: isDescending).snapshots();
     });
   }
 
@@ -81,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 onSelected: (value) {
                   if (value == 0) {
                     changeOrder();
-                    streamQuery = FirebaseFirestore.instance.collection("Notes").orderBy("note_content", descending: false).snapshots();
                   } else if (value == 1) {
                     print("Settings menu is selected.");
                   } else if (value == 2) {
@@ -102,8 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         prefixIcon: Icon(Icons.search),
                       ),
                       onChanged: (value) {
-                        changeSearchWord(value);
-                        streamQuery = FirebaseFirestore.instance.collection("Notes").where('note_content', isGreaterThanOrEqualTo: searchWord).where('note_content', isLessThan: '${searchWord}z').snapshots();
+                        setState(() {
+                          searchWord = value.toLowerCase();
+                        });
                       }),
                 ),
               ),
@@ -116,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: StreamBuilder<QuerySnapshot>(
-                    stream: streamQuery,
+                    stream: FirebaseFirestore.instance.collection("Notes").orderBy("creation_date", descending: isDescending).snapshots(),
                     builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
@@ -124,11 +111,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }
                       if (snapshot.hasData) {
-                        var data = snapshot.data!.docs;
+                        final filteredDoc = snapshot.data!.docs.where((doc) => doc.data().toString().toLowerCase().contains(searchWord));
                         return GridView.builder(
-                          itemCount: data.length,
+                          itemCount: filteredDoc.length,
                           itemBuilder: (context, index) {
-                            var note = data[index];
+                            final note = filteredDoc.elementAt(index);
                             //if (searchWord == "") {
                             return noteCard(() {
                               Navigator.push(
